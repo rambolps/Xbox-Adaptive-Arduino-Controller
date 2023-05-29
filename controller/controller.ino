@@ -109,11 +109,11 @@ void readButtonInputs(){
     digitalWrite(clockPulse, HIGH);
   }
 
-  byte sendGameButtonSignals(){
+  byte executeGameButtons(){
     //check if system mode was switched
     if(inputButtons[13] == 1){
       gameMode = false;
-      return 2;
+      return 1;
     }
 
 
@@ -127,7 +127,7 @@ void readButtonInputs(){
         triggerMode = 0;
       }
 
-      return 3;
+      return 2;
     }
 
     //send gamepad button signals
@@ -140,5 +140,13 @@ void readButtonInputs(){
       //send macro sginals
     }
 
+  }
+
+  byte executeProgramButtons(){
+    //check if system mode was switched
+    if(inputButtons[13] == 1){
+      gameMode = true;
+      return 1;
+    }
   }
 }
