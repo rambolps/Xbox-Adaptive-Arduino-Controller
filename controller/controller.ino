@@ -58,10 +58,6 @@ void setup() {
 void loop() {
 
   delay(100);
-
-  for(int i= 0; i < 13; i++){
-    readAndSetButtonInput(i);
-  }
   
 }
 
