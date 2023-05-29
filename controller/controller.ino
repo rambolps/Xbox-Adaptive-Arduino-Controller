@@ -24,9 +24,13 @@
 #define ledG 6
 #define ledB 8
 
+
+
+
 //Global Variables
 byte inputButtons[20];
 bool gameMode;
+byte triggerMode;
 
 
 void setup() {
@@ -38,6 +42,10 @@ void setup() {
 
   //Start Controller in Game Mode
   gameMode = true;
+
+  //set trigger mode to normal
+  //0 = normal, 1 = sticky, 2 = rapid
+  triggerMode = 0;
 
   //Set Button Pins to Input
   for(int i = 0; i < 15; i++){
@@ -99,5 +107,38 @@ void readButtonInputs(){
     //load next bit (pulse clock)
     digitalWrite(clockPulse, LOW);
     digitalWrite(clockPulse, HIGH);
+  }
+
+  byte sendGameButtonSignals(){
+    //check if system mode was switched
+    if(inputButtons[13] == 1){
+      gameMode = false;
+      return 2;
+    }
+
+
+    //check if trigger mode was switched
+    if(inputButtons[14] == 1){
+      //change trigegr mode
+      //0 = normal, 1 = sticky, 2 = rapid
+      triggerMode++;
+
+      if(triggerMode == 3){
+        triggerMode = 0;
+      }
+
+      return 3;
+    }
+
+    //send gamepad button signals
+    for(int i = 0; i < 13; i++){
+      //set button
+    }
+
+    //send macro button signals
+    for(int i = 15; i < 20; i++){
+      //send macro sginals
+    }
+
   }
 }
