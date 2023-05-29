@@ -47,11 +47,6 @@ void setup() {
   //0 = normal, 1 = sticky, 2 = rapid
   triggerMode = 0;
 
-  //Set Button Pins to Input
-  for(int i = 0; i < 15; i++){
-    pinMode(i, INPUT_PULLUP);
-  }
-
   //Set Pin Modes For Button Inputs
   pinMode(ioSelect, OUTPUT);
   pinMode(clockPulse, OUTPUT);
