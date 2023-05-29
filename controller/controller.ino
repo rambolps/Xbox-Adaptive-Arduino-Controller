@@ -18,7 +18,7 @@
 //Digital Pin Defintions
 #define ioSelect 2
 #define clockPulse 3
-#define dataOut 4;
+#define dataIn 4;
 
 #define ledR 5
 #define ledG 6
