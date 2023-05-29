@@ -8,35 +8,24 @@
 #include <EEPROM.h>
 
 //Analog Pin Defintions
-#define JLV 0
-#define JLH 1
-#define JRV 2
-#define JRH 3
-#define DPV 4
-#define DPH 5
+#define JLX 0
+#define JLY 1
+#define JRX 2
+#define JRY 3
+#define DPX 4
+#define DPY 5
 
 //Digital Pin Defintions
-#define Pin_LOGO 0
-#define Pin_A 1
-#define Pin_B 2
-#define Pin_X 3
-#define Pin_Y 4
-#define Pin_LB 5
-#define Pin_RB 6
-#define Pin_BACK 7
-#define Pin_START 8
-#define Pin_L3 9
-#define Pin_R3 10
-#define Pin_LT 11
-#define Pin_RT 12
-#define PIN_MODE 13
-#define PIN_STICKY 14
-#define PIN_LED 15
+#define ioSelect 2
+#define clockPulse 3
+#define dataOut 4;
 
+#define ledR 5
+#define ledG 6
+#define ledB 8
 
 //Global Variables
-byte buttons[19];
-byte pinToButton[13] = {0,1,2,3,4,5,6,7,8,9,10,15,16};
+byte inputButtons[20];
 bool gameMode;
 
 
@@ -47,10 +36,6 @@ void setup() {
   //Start Serial Communication (DEBUG MODE)
   Serial.begin(9600);
 
-
-  //Set Button Layout from EEPROM
-  setLayout();
-
   //Start Controller in Game Mode
   gameMode = true;
 
@@ -59,8 +44,10 @@ void setup() {
     pinMode(i, INPUT_PULLUP);
   }
 
-  //set LED Pin to Output
-  pinMode(PIN_LED, OUTPUT);
+  //Set Pin Modes For Button Inputs
+  pinMode(ioSelect, OUTPUT);
+  pinMode(clockPulse, OUTPUT);
+  pinMode(dataIn, INPUT);
 
 }
 
@@ -77,18 +64,40 @@ void loop() {
 
 void resetEEPROM(){
 
-  for(int i = 0; i < 19; i++){
+  //set defualt values for the regular buttons
+  for(int i = 0; i < 15; i++){
     EEPROM.update(i,i);
   }
-}
 
-void setLayout(){
-  for(int i = 0; i < 19; i++){
-    buttons[i] = EEPROM.read(i);
+  //set all the macro buuttons to 100
+  //100 is the "empty data" value
+  for (int i = 15; i < 40; i++){
+    EEPROM.update(i,100);
   }
 }
 
-void readAndSetButtonInput(byte pin){
-  bool press = !digitalRead(pin)
-  XInput.setButton(pinToButton[pin], temp);
+
+void readButtonInputs(){
+
+  //enable parallel input
+  digitalWrite(ioSelect, 0);
+
+  //start clock pin low
+  digitalWrite(clockPulse, 0);
+
+  //set clock pin high (load data into SR)
+  digitalWrite(clockPulse, 1);
+
+  //enable serial output
+  digitalWrite(ioSelect, 1);
+
+
+  for(int i = 0; i < 20; i++){
+    //set value of input to the array
+    inputButtons[i] = digitalRead(dataIn);
+
+    //load next bit (pulse clock)
+    digitalWrite(clockPulse, LOW);
+    digitalWrite(clockPulse, HIGH);
+  }
 }
