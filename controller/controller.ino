@@ -125,14 +125,14 @@ void readButtonInputs(){
 
   byte executeGameButtons(){
     //check if system mode was switched
-    if(inputButtons[13] == 1){
+    if(inputButtons[Button_MODE] == 1){
       gameMode = false;
       return 1;
     }
 
 
     //check if trigger mode was switched
-    if(inputButtons[14] == 1){
+    if(inputButtons[Button_OPTION] == 1){
       //change trigegr mode
       //0 = normal, 1 = sticky, 2 = rapid
       triggerMode++;
@@ -144,15 +144,16 @@ void readButtonInputs(){
       return 2;
     }
 
+    //send macro button signals
+    if
+
     //send gamepad button signals
     for(int i = 0; i < 13; i++){
-      //set button
+      //set button state
+      XInput.setButton(i, inputButtons[i]);
     }
 
-    //send macro button signals
-    for(int i = 15; i < 20; i++){
-      //send macro sginals
-    }
+
 
   }
 
@@ -162,5 +163,7 @@ void readButtonInputs(){
       gameMode = true;
       return 1;
     }
+
+
   }
 }
