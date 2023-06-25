@@ -35,20 +35,9 @@ void loop() {
   int joystickValueX = analogRead(Vx);
   int joystickValueY = analogRead(Vy);
   XInput.setJoystick(JOY_LEFT, joystickValueX, joystickValueY);  // move x, leave y centered
-
- Serial.println(joystickValueX);
- Serial.println(joystickValueY);
- Serial.println(inputButtons[0]);
- Serial.println(inputButtons[1]);
- Serial.println(inputButtons[2]);
- Serial.println(inputButtons[3]);
- Serial.println(inputButtons[4]);
- Serial.println(inputButtons[5]);
- Serial.println(inputButtons[6]);
- Serial.println(inputButtons[7]);
   readButtonInputs();
   setButtonstate();
-  delay(100);
+  delay(1);
  
 };
 
