@@ -22,8 +22,14 @@ void setup() {
 
 void loop() {
   readButtonInputs();
-  displayButtonPos();
-  delay(1);
+  //displayButtonPos();
+  for(int i = 0; i < 20; i++){
+    Serial.print(i);
+    Serial.print(": ");
+    Serial.println(inputButtons[i]);
+  }
+  
+  delay(500);
  
 }
 
@@ -56,6 +62,7 @@ void readButtonInputs(){
 }
 
 void displayButtonPos(){
+  
     for(int i = 0; i < 20; i++){
         if(inputButtons[i] == 1){
             Serial.println("Button Number "+i);
