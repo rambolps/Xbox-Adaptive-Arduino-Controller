@@ -32,6 +32,29 @@ byte inputButtons[20];
 bool gameMode;
 byte triggerMode;
 
+//Button Enum
+enum ButtonDict{
+  Button_X,
+  Button_Y,
+  Button_A,
+  Button_B,
+  Button_START,
+  Button_SELECT,
+  Button_LOGO,
+  Button_RB,
+  Button_RT,
+  Button_R3,
+  Button_LB,
+  Button_LT,
+  Button_L3,
+  Button_MODE,
+  Button_OPTION,
+  Button_M1,
+  Button_M2,
+  Button_M3,
+  Button_M4,
+  Button_M5,
+}
 
 void setup() {
 	//Start Xinput Protocal
