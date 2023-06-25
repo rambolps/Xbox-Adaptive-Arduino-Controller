@@ -31,6 +31,8 @@
 byte inputButtons[20];
 bool gameMode;
 byte triggerMode;
+bool RTON;
+bool LTON;
 
 //Button Enum
 enum ButtonDict{
@@ -69,6 +71,9 @@ void setup() {
   //set trigger mode to normal
   //0 = normal, 1 = sticky, 2 = rapid
   triggerMode = 0;
+  RTON = false;
+  LTON = false;
+  
 
   //Set Pin Modes For Button Inputs
   pinMode(ioSelect, OUTPUT);
@@ -80,7 +85,7 @@ void setup() {
 
 void loop() {
 
-  delay(100);
+  delay(1);
   
 }
 
@@ -98,6 +103,15 @@ void resetEEPROM(){
   }
 }
 
+void miniMacro(byte mem){
+  if(EEPROM.read(mem) != 100){
+    XInput.setButton(EEPROM.read(mem), 1);
+    //REDO delay to incorparate proper recorded timings
+    delay(10);
+    XInput.setButton(EEPROM.read(mem), 0);
+
+  }
+}
 
 void readButtonInputs(){
 
@@ -141,29 +155,145 @@ void readButtonInputs(){
         triggerMode = 0;
       }
 
+      XInput.setTrigger(TRIGGER_LEFT, 0);
+      XInput.setTrigger(TRIGGER_RIGHT, 0);
+      RTON = false;
+      LTON = false;
       return 2;
     }
 
     //send macro button signals
-    if
+    if(inputButtons[Button_M1] == 1){
+      for(int i = 15; i < 20; i++){
+        miniMacro(i);
+      }
+      return 0;
+    }
+
+    if(inputButtons[Button_M2] == 1){
+      for(int i = 20; i < 25; i++){
+        miniMacro(i);
+      }
+      return 0;
+    }
+
+    if(inputButtons[Button_M3] == 1){
+      for(int i = 25; i < 30; i++){
+        miniMacro(i);
+      }
+      return 0;
+    }
+
+    if(inputButtons[Button_M4] == 1){
+      for(int i = 30; i < 35; i++){
+        miniMacro(i);
+      }
+      return 0;
+    }
+
+    if(inputButtons[Button_M5] == 1){
+      for(int i = 35; i < 40; i++){
+        miniMacro(i);
+      }
+      return 0;
+    }
 
     //send gamepad button signals
     for(int i = 0; i < 13; i++){
       //set button state
-      XInput.setButton(i, inputButtons[i]);
+      if (i != Button_LT && i != Button_RT)
+      {
+        XInput.setButton(i, inputButtons[i]);
+      }
+      
     }
 
+  }
 
+  void executeTrigger(){
+    if (triggerMode == 0)
+    {
+      if (inputButtons[Button_LT] == 1)
+      {
+        XInput.setTrigger(TRIGGER_LEFT, 255);
+      }
+      else
+      {
+        XInput.setTrigger(TRIGGER_LEFT, 0);
+      }
+      
+	    if (inputButtons[Button_RT] == 1)
+      {
+        XInput.setTrigger(TRIGGER_RIGHT, 255);
+      }
+      else
+      {
+        XInput.setTrigger(TRIGGER_RIGHT, 0);
+      }
+    }
+    else if (triggerMode == 1)
+    {
+      if (inputButtons[Button_LT] == 1)
+      {
+        if (LTON)
+        {
+          XInput.setTrigger(TRIGGER_LEFT, 0);
+          LTON = false;
+        } else
+        {
+          XInput.setTrigger(TRIGGER_LEFT, 255);
+          LTON = true;
+        }
+      }
 
+      if (inputButtons[Button_RT] == 1)
+      {
+        if (RTON)
+        {
+          XInput.setTrigger(TRIGGER_RIGHT, 0);
+          RTON = false;
+        } else
+        {
+          XInput.setTrigger(TRIGGER_RIGHT, 255);
+          RTON = true;
+        }
+      }
+    }
+    else
+    {
+      if (LTON)
+      {
+        XInput.setTrigger(TRIGGER_LEFT, 0);
+        LTON = false;
+      } else
+      {
+        XInput.setTrigger(TRIGGER_LEFT, 255);
+        LTON = true;
+      }
+
+      if (RTON)
+      {
+        XInput.setTrigger(TRIGGER_RIGHT, 0);
+        RTON = false;
+      } else
+      {
+        XInput.setTrigger(TRIGGER_RIGHT, 255);
+        RTON = true;
+      }
+    }
+    
   }
 
   byte executeProgramButtons(){
     //check if system mode was switched
-    if(inputButtons[13] == 1){
+    if(inputButtons[Button_MODE] == 1){
       gameMode = true;
       return 1;
     }
 
-
+    if(inputButtons[Button_OPTION] == 1){
+      resetEEPROM();
+      return 2;
+    }
   }
 }
