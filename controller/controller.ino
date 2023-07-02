@@ -8,12 +8,12 @@
 #include <EEPROM.h>
 
 //Analog Pin Defintions
-#define JLX 0
-#define JLY 1
-#define JRX 2
-#define JRY 3
-#define DPX 4
-#define DPY 5
+#define JLX A0
+#define JLY A1
+#define JRX A2
+#define JRY A3
+#define DPX A4
+#define DPY A5
 
 //Digital Pin Defintions
 #define ioSelect 2
