@@ -47,25 +47,25 @@ enum PStates : uint8_t {
 //Button Enum
 enum ButtonDict : uint8_t{
   Button_X,
-  Button_Y,
-  Button_A,
-  Button_B,
-  Button_START,
+  Button_Y = 2,
+  Button_A = 10,
+  Button_B = 3,
+  Button_START = 11,
   Button_SELECT,
-  Button_LOGO,
+  Button_LOGO = 12,
   Button_RB,
   Button_RT,
   Button_R3,
   Button_LB,
-  Button_LT,
+  Button_LT = 9,
   Button_L3,
-  Button_MODE,
-  Button_OPTION,
-  Button_M1,
-  Button_M2,
-  Button_M3,
-  Button_M4,
-  Button_M5,
+  Button_MODE = 13,
+  Button_OPTION = 14,
+  Button_M1 = 15,
+  Button_M2 = 16,
+  Button_M3 = 17,
+  Button_M4 = 18,
+  Button_M5 = 19,
 };
 
 void setLed(int R, int G, int B){
@@ -632,6 +632,7 @@ int executeProgramButtons(){
       }
     }
     
+    setLed(255,110,0);
     PState = S3;
     return 0;
   }
