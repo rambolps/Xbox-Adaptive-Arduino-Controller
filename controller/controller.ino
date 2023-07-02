@@ -197,7 +197,7 @@ void executeJoysticks(){
   XInput.setJoystick(JOY_RIGHT, RJVX, RJVY);
 }
 
-void executeDpad(){
+int executeDpad(){
   //get x y values
   float DJVX = float(analogRead(DPX));
   float DJVY = float(analogRead(DPY));
@@ -215,6 +215,16 @@ void executeDpad(){
     if(smallDist > dists[i]){
       smallDist = dists[i];
     }
+  }
+
+  //minimum distance
+  if (smallDist > 300){
+    XInput.setButton(DPAD_UP, 0);
+    XInput.setButton(DPAD_DOWN, 0);
+    XInput.setButton(DPAD_LEFT, 0);
+    XInput.setButton(DPAD_RIGHT, 0);
+
+    return 0;
   }
 
   if(smallDist == distUp){
@@ -241,7 +251,7 @@ void executeDpad(){
     XInput.setButton(DPAD_RIGHT, 0);
   }
   
-
+  return 0;
 }
 
 void resetEEPROM(){
