@@ -46,7 +46,7 @@ enum PStates : uint8_t {
 
 //Button Enum
 enum ButtonDict : uint8_t{
-  Button_X,
+  Button_X = 8,
   Button_Y = 2,
   Button_A = 10,
   Button_B = 3,
