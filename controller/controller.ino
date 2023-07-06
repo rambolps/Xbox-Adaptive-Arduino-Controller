@@ -24,6 +24,8 @@
 #define ledG 6
 #define ledB 9
 
+//Wait time in between program button pressed
+#define WAIT_TIME 2000
 
 //Global Variables
 byte inputButtons[20];
@@ -123,7 +125,20 @@ void loop() {
     executeTrigger();
 
   } else{
-    executeProgramButtons();
+      bool isAButtonPressed = false;
+
+      for(int i = 0; i < 20; i++){
+        if(inputButtons[i] == 1){
+          isAButtonPressed = true;
+        }
+      }
+
+      if (isAButtonPressed == true){
+        setLed(255,0,0);
+        executeProgramButtons();
+        setLed(255,255,255);
+        delay(WAIT_TIME);
+      }
   }
 
   delay(1);
@@ -317,6 +332,8 @@ int executeGameButtons(){
   //check if system mode was switched
   if(inputButtons[Button_MODE] == 1){
     gameMode = false;
+    setLed(255,255,255);  
+    delay(WAIT_TIME);
     setLed(255,0,0);
     return 1;
   }
@@ -336,6 +353,9 @@ int executeGameButtons(){
     XInput.setTrigger(TRIGGER_RIGHT, 0);
     RTON = false;
     LTON = false;
+    setLed(255,255,255);  
+    delay(WAIT_TIME);
+    setLed(0,255,0);  
     return 2;
   }
 
