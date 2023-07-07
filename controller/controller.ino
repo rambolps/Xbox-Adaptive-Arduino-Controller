@@ -134,10 +134,7 @@ void loop() {
       }
 
       if (isAButtonPressed == true){
-        setLed(255,0,0);
         executeProgramButtons();
-        setLed(255,255,255);
-        delay(WAIT_TIME);
       }
   }
 
@@ -509,6 +506,10 @@ void executeTrigger(){
         RTON = true;
       }
     }
+
+    setLed(255,255,255);
+    delay(WAIT_TIME);
+    setLed(0,255,0);
   }
   else
   {
