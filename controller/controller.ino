@@ -217,7 +217,7 @@ void executeJoysticks(){
   //Right Joystick
   int RJVX = analogRead(JRX);
   int RJVY = analogRead(JRY);
-  XInput.setJoystick(JOY_RIGHT, RJVX, RJVY);
+  //XInput.setJoystick(JOY_RIGHT, RJVX, RJVY);
 }
 
 int executeDpad(){
