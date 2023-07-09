@@ -4,7 +4,9 @@
 #define dataIn 4
 
 
+byte inputButtonsX[24];
 byte inputButtons[20];
+
 
 
 void setup() {
@@ -49,9 +51,9 @@ void readButtonInputs(){
   digitalWrite(ioSelect, 1);
 
 
-  for(int i = 0; i < 20; i++){
+  for(int i = 0; i < 24; i++){
     //set value of input to the array
-    inputButtons[i] = digitalRead(dataIn);
+    inputButtonsX[i] = digitalRead(dataIn);
 
 
     //load next bit (pulse clock)
@@ -59,15 +61,14 @@ void readButtonInputs(){
     digitalWrite(clockPulse, HIGH);
   }
 
-}
+  for(int i = 0; i < 16; i++){
+    inputButtons[i] = inputButtonsX[i];
+  }
 
-void displayButtonPos(){
-  
-    for(int i = 0; i < 20; i++){
-        if(inputButtons[i] == 1){
-            Serial.println("Button Number "+i);
-        }
-    }
+    for(int i = 16; i < 20; i++){
+    inputButtons[i] = inputButtonsX[i+4];
+  }
+
 }
 
 
