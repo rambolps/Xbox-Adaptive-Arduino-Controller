@@ -33,6 +33,8 @@ bool gameMode;
 byte triggerMode;
 bool RTON;
 bool LTON;
+bool RFLON;
+bool RFRON;
 int oldButton;
 int PState;
 
@@ -76,6 +78,12 @@ void setLed(int R, int G, int B){
   analogWrite(ledB, B);
 }
 
+void waitLED(int R, int G, int B, int W){
+  setLed(255,255,255);
+  delay(W);
+  setLed(R,G,B);
+}
+
 void setup() {
 	//Start Xinput Protocal
   XInput.begin();
@@ -92,6 +100,8 @@ void setup() {
   triggerMode = 0;
   RTON = false;
   LTON = false;
+  RFLON = false;
+  RFRON = false;
   
   //set program mode state
   PState = 0;
@@ -329,9 +339,7 @@ int executeGameButtons(){
   //check if system mode was switched
   if(inputButtons[Button_MODE] == 1){
     gameMode = false;
-    setLed(255,255,255);  
-    delay(WAIT_TIME);
-    setLed(255,0,0);
+    waitLED(255,0,0,WAIT_TIME);
     return 1;
   }
 
@@ -350,9 +358,9 @@ int executeGameButtons(){
     XInput.setTrigger(TRIGGER_RIGHT, 0);
     RTON = false;
     LTON = false;
-    setLed(255,255,255);  
-    delay(WAIT_TIME);
-    setLed(0,255,0);  
+    RFLON = false;
+    RFRON = false;
+    waitLED(0,255,0,WAIT_TIME); 
     return 2;
   }
 
@@ -393,7 +401,7 @@ int executeGameButtons(){
   }
 
   //send gamepad button signals
-  for(int i = 0; i < 20; i++){
+  for(int i = 0; i < 13; i++){
     //set button state
     if (i != Button_LT && i != Button_RT)
     {
@@ -483,6 +491,9 @@ void executeTrigger(){
   {
     if (inputButtons[convertMEEPROM(Button_LT)] == 1)
     {
+      
+      waitLED(0,255,0,WAIT_TIME);
+
       if (LTON)
       {
         XInput.setTrigger(TRIGGER_LEFT, 0);
@@ -496,6 +507,8 @@ void executeTrigger(){
 
     if (inputButtons[convertMEEPROM(Button_RT)] == 1)
     {
+      waitLED(0,255,0,WAIT_TIME);
+      
       if (RTON)
       {
         XInput.setTrigger(TRIGGER_RIGHT, 0);
@@ -507,31 +520,47 @@ void executeTrigger(){
       }
     }
 
-    setLed(255,255,255);
-    delay(WAIT_TIME);
-    setLed(0,255,0);
   }
   else
   {
-    if (LTON)
-    {
-      XInput.setTrigger(TRIGGER_LEFT, 0);
-      LTON = false;
-    } else
-    {
-      XInput.setTrigger(TRIGGER_LEFT, 255);
-      LTON = true;
+
+    if (inputButtons[convertMEEPROM(Button_LT)] == 1){
+      RFLON = !RFLON;
+      waitLED(0,255,0,WAIT_TIME);
     }
 
-    if (RTON)
-    {
-      XInput.setTrigger(TRIGGER_RIGHT, 0);
-      RTON = false;
-    } else
-    {
-      XInput.setTrigger(TRIGGER_RIGHT, 255);
-      RTON = true;
+    if (inputButtons[convertMEEPROM(Button_RT)] == 1){
+      RFRON = !RFRON;
+      waitLED(0,255,0,WAIT_TIME);
     }
+
+
+    if (RFLON)
+    {
+      if (LTON)
+      {
+        XInput.setTrigger(TRIGGER_LEFT, 0);
+        LTON = false;
+      } else
+      {
+        XInput.setTrigger(TRIGGER_LEFT, 255);
+        LTON = true;
+      }
+    }
+    
+    if (RFRON)
+    {
+      if (RTON)
+      {
+        XInput.setTrigger(TRIGGER_RIGHT, 0);
+        RTON = false;
+      } else
+      {
+        XInput.setTrigger(TRIGGER_RIGHT, 255);
+        RTON = true;
+      }
+    }
+
   }
   
 }
@@ -551,40 +580,41 @@ int executeProgramButtons(){
   if(PState == Defualt){
     if(inputButtons[Button_OPTION] == 1){
       resetEEPROM();
+      waitLED(255,0,0,WAIT_TIME);
       return 2;
     }
 
     if(inputButtons[Button_M1] == 1){
       oldButton = Button_M1;
-      setLed(0,0,255);
+      waitLED(0,0,255,WAIT_TIME);
       PState = S1;
       return 0;
     }
 
     if(inputButtons[Button_M2] == 1){
       oldButton = Button_M2;
-      setLed(0,0,255);
+      waitLED(0,0,255,WAIT_TIME);
       PState = S1;
       return 0;
     }
 
     if(inputButtons[Button_M3] == 1){
       oldButton = Button_M3;
-      setLed(0,0,255);
+      waitLED(0,0,255,WAIT_TIME);
       PState = S1;
       return 0;
     }
 
     if(inputButtons[Button_M4] == 1){
       oldButton = Button_M4;
-      setLed(0,0,255);
+      waitLED(0,0,255,WAIT_TIME);
       PState = S1;
       return 0;
     }
 
     if(inputButtons[Button_M5] == 1){
       oldButton = Button_M5;
-      setLed(0,0,255);
+      waitLED(0,0,255,WAIT_TIME);
       PState = S1;
       return 0;
     }
@@ -593,7 +623,7 @@ int executeProgramButtons(){
   if(PState == S1){
     if(inputButtons[Button_OPTION] == 1){
       PState = Defualt;
-      setLed(255,0,0);
+      waitLED(255,0,0,WAIT_TIME);
       return 2;
     }
 
@@ -619,7 +649,7 @@ int executeProgramButtons(){
       }
     }
     
-    setLed(255,255,0);
+    waitLED(255,255,0,WAIT_TIME);
     PState = S2;
     return 0;
   }
@@ -627,7 +657,7 @@ int executeProgramButtons(){
   if(PState == S2){
     if(inputButtons[Button_OPTION] == 1){
       PState = Defualt;
-      setLed(255,0,0);
+      waitLED(255,0,0,WAIT_TIME);
       return 2;
     }
 
@@ -653,7 +683,7 @@ int executeProgramButtons(){
       }
     }
     
-    setLed(255,110,0);
+    waitLED(255,110,0,WAIT_TIME);
     PState = S3;
     return 0;
   }
@@ -661,7 +691,7 @@ int executeProgramButtons(){
   if(PState == S3){
     if(inputButtons[Button_OPTION] == 1){
       PState = Defualt;
-      setLed(255,0,0);
+      waitLED(255,0,0,WAIT_TIME);
       return 2;
     }
 
@@ -687,7 +717,7 @@ int executeProgramButtons(){
       }
     }
     
-    setLed(255,149,0);
+    waitLED(255,149,0,WAIT_TIME);
     PState = S4;
     return 0;
   }
@@ -695,7 +725,7 @@ int executeProgramButtons(){
   if(PState == S4){
     if(inputButtons[Button_OPTION] == 1){
       PState = Defualt;
-      setLed(255,0,0);
+      waitLED(255,0,0,WAIT_TIME);
       return 2;
     }
 
@@ -720,7 +750,7 @@ int executeProgramButtons(){
         EEPROM.update(38, i);
       }
     }
-    setLed(255,0,255);
+    waitLED(255,0,255,WAIT_TIME);
     PState = S5;
     return 0;
   }
@@ -728,7 +758,7 @@ int executeProgramButtons(){
   if(PState == S5){
     if(inputButtons[Button_OPTION] == 1){
       PState = Defualt;
-      setLed(255,0,0);
+      waitLED(255,0,0,WAIT_TIME);
       return 2;
     }
 
@@ -755,21 +785,28 @@ int executeProgramButtons(){
     }
     
     PState = Defualt;
-    setLed(255,0,0);
+    waitLED(255,0,0,WAIT_TIME);
     return 0;
   }
 
   //single button
   if(PState == WaitingSB){
+
+    if(inputButtons[Button_OPTION] == 1){
+      PState = Defualt;
+      waitLED(255,0,0,WAIT_TIME);
+      return 2;
+    }
+
     for(int i = 0; i < 15; i++){
       EEPROM.update(oldButton, i);
-      setLed(255,0,0);
+      waitLED(255,0,0,WAIT_TIME);
       PState = Defualt;
     }
   } else{
     for(int i = 0; i < 15; i++){
       oldButton = i;
-      setLed(0,0,255);
+      waitLED(0,0,255,WAIT_TIME);
       PState = WaitingSB;
     }
   }
