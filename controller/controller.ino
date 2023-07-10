@@ -6,7 +6,6 @@
 
 #include <XInput.h>
 #include <EEPROM.h>
-#include <LinkedList.h>
 
 //Analog Pin Defintions
 #define JLX A0
@@ -218,7 +217,7 @@ void executeJoysticks(){
   //Right Joystick
   int RJVX = analogRead(JRX);
   int RJVY = analogRead(JRY);
-  //XInput.setJoystick(JOY_RIGHT, RJVX, RJVY);
+  XInput.setJoystick(JOY_RIGHT, RJVX, RJVY);
 }
 
 int executeDpad(){
@@ -411,44 +410,12 @@ int executeGameButtons(){
     return 0;
   }
 
-  byte tempStates[13] = {0};
-  LinkedList<int> tempX = LinkedList<int>();
-  LinkedList<int> tempI = LinkedList<int>();
-
-
-  for(int i = 0; i < 13; i++){
-    
-    bool wasPressed = false;
-    int pIndex = -1;
-
-    for(int j = 0; j < tempX.size(); j++){
-      if(tempX.get(j) == convertMX(convertMEEPROM(i))){
-        wasPressed = true;
-        pIndex = j;
-        break;
-      }
-    }
-
-    if(wasPressed){
-      if(tempStates[tempI.get(pIndex)] == 0){
-        tempStates[i] = inputButtons[i];
-      }
-    } 
-    else{
-      
-      tempX.add(convertMX(convertMEEPROM(i)));
-      tempI.add(i);
-
-      tempStates[i] = inputButtons[i];
-    }
-  }
-
   //send gamepad button signals
   for(int i = 0; i < 13; i++){
     //set button state
     if (i != Button_LT && i != Button_RT)
     {
-      XInput.setButton(convertMX(convertMEEPROM(i)), tempStates[i]);
+      XInput.setButton(convertMX(convertMEEPROM(i)), inputButtons[i]);
     }
     
   }
@@ -840,38 +807,6 @@ int executeProgramButtons(){
         return 0;
       }
     }
-  }
-
-  //single button
-  if(PState == WaitingSB){
-
-    if(inputButtons[Button_OPTION] == 1){
-      PState = Defualt;
-      waitLED(255,0,0,WAIT_TIME);
-      return 2;
-    }
-
-    for(int i = 0; i < 15; i++){
-      if(inputButtons[i] == 1){
-        EEPROM.update(oldButton, i);
-        PState = Defualt;
-        waitLED(255,0,0,WAIT_TIME);
-        return 0;
-      }
-    }
-    
-
-  } else{
-    for(int i = 0; i < 15; i++){
-      if(inputButtons[i] == 1){
-       oldButton = i;
-       PState = WaitingSB;
-       waitLED(0,0,255,WAIT_TIME);
-       return 0;
-      }
-    }
-    
-
   }
 }
 
