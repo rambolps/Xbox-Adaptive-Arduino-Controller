@@ -410,12 +410,19 @@ int executeGameButtons(){
     return 0;
   }
 
+  byte tempStates[13] = {0};
+
+  for(int i = 0; i < 13; i++){
+    if(tempStates[i] == 0){
+      tempStates[i] = inputButtons[i];
+    }
+  }
   //send gamepad button signals
   for(int i = 0; i < 13; i++){
     //set button state
     if (i != Button_LT && i != Button_RT)
     {
-      XInput.setButton(convertMX(convertMEEPROM(i)), inputButtons[i]);
+      XInput.setButton(convertMX(convertMEEPROM(i)), tempStates[i]);
     }
     
   }
