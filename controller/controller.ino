@@ -6,6 +6,7 @@
 
 #include <XInput.h>
 #include <EEPROM.h>
+#include <LinkedList.h>
 
 //Analog Pin Defintions
 #define JLX A0
@@ -411,13 +412,37 @@ int executeGameButtons(){
   }
 
   byte tempStates[13] = {0};
+  LinkedList<int> tempX = LinkedList<int>();
+  LinkedList<int> tempI = LinkedList<int>();
+
 
   for(int i = 0; i < 13; i++){
-    if(tempStates[i] == 0){
+    
+    bool wasPressed = false;
+    int pIndex = -1;
+
+    for(int j = 0; j < tempX.size(); j++){
+      if(tempX.get(j) == convertMX(convertMEEPROM(i))){
+        wasPressed = true;
+        pIndex = j;
+        break;
+      }
+    }
+
+    if(wasPressed){
+      if(tempStates[tempI.get(pIndex)] == 0){
+        tempStates[i] = inputButtons[i];
+      }
+    } 
+    else{
+      
+      tempX.add(convertMX(convertMEEPROM(i)));
+      tempI.add(i);
+
       tempStates[i] = inputButtons[i];
     }
   }
-  
+
   //send gamepad button signals
   for(int i = 0; i < 13; i++){
     //set button state
