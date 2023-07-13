@@ -8,12 +8,12 @@
 #include <EEPROM.h>
 
 //Analog Pin Defintions
-#define JLX A3
-#define JLY A2
-#define JRX A1
-#define JRY A0
-#define DPX A4
-#define DPY A5
+#define JLX A1
+#define JLY A0
+#define JRX A4
+#define JRY A5
+#define DPX A3
+#define DPY A2
 
 //Digital Pin Defintions
 #define ioSelect 2
@@ -51,18 +51,18 @@ enum PStates : uint8_t {
 
 //Button Enum
 enum ButtonDict : uint8_t{
-  Button_X = 4,
-  Button_Y = 5,
+  Button_X = 1,
+  Button_Y = 2,
   Button_A = 6,
-  Button_B = 7,
+  Button_B = 5,
   Button_START = 11,
   Button_SELECT = 12,
   Button_LOGO = 10,
-  Button_RB = 0,
-  Button_RT = 1,
+  Button_RB = 4,
+  Button_RT = 3,
   Button_R3 = 9,
-  Button_LB = 2,
-  Button_LT = 3,
+  Button_LB = 7,
+  Button_LT = 0,
   Button_L3 = 8,
   Button_MODE = 13,
   Button_OPTION = 14,
@@ -232,7 +232,7 @@ void executeJoysticks(){
   RJVX -= 512;
   RJVY -= 512;
 
-  RJVX *= -1;
+  RJVX *= 1;
   RJVY *= -1;
 
   if(RJVX > -5 && RJVX < 5 && RJVY > -5 && RJVY < 5){
@@ -247,15 +247,15 @@ int executeDpad(){
   float DJVX = float(analogRead(DPX));
   float DJVY = float(analogRead(DPY));
 
-  double distUp = sqrt(sq(512-DJVX)+sq(1023-DJVY));
-  double distDown = sqrt(sq(512-DJVX)+sq(0-DJVY));
+  double distUp = sqrt(sq(512-DJVX)+sq(0-DJVY));
+  double distDown = sqrt(sq(512-DJVX)+sq(1023-DJVY));
   double distRight = sqrt(sq(0-DJVX)+sq(512-DJVY));
   double distLeft = sqrt(sq(1023-DJVX)+sq(512-DJVY));
 
-  double distTL = sqrt(sq(1023-DJVX)+sq(1023-DJVY));
-  double distTR = sqrt(sq(0-DJVX)+sq(1023-DJVY));
-  double distBL = sqrt(sq(1023-DJVX)+sq(0-DJVY));
-  double distBR = sqrt(sq(0-DJVX)+sq(0-DJVY));
+  double distTL = sqrt(sq(1023-DJVX)+sq(0-DJVY));
+  double distTR = sqrt(sq(0-DJVX)+sq(0-DJVY));
+  double distBL = sqrt(sq(1023-DJVX)+sq(1023-DJVY));
+  double distBR = sqrt(sq(0-DJVX)+sq(1023-DJVY));
 
   
   double dists[8] = {distUp,distDown,distLeft,distRight, distTL, distTR, distBL, distBR};
